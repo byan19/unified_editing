@@ -456,7 +456,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--model_name",
-        choices=["gpt2-medium", "gpt2-large", "gpt2-xl", "EleutherAI/gpt-j-6B", "Llama-2-7b"],
+        choices=["gpt2-medium", "gpt2-large", "gpt2-xl", "EleutherAI/gpt-j-6B", "Llama-2-7b", "meta-llama/Llama-2-7b-hf"],
         default="gpt2-xl",
         help="Model to edit.",
         required=False,
