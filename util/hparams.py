@@ -1,6 +1,7 @@
 import json
 from dataclasses import dataclass
-
+import sys
+sys.path.append('/home/engs2575/project/unified-model-editing')
 
 @dataclass
 class HyperParams:
