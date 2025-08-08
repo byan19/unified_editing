@@ -12,7 +12,6 @@ class HyperParams:
 
     @classmethod
     def from_json(cls, fpath):
-        pdb.set_trace()
         with open(fpath, "r") as f:
             data = json.load(f)
 
