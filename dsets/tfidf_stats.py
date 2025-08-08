@@ -14,7 +14,7 @@ REMOTE_IDF_URL = f"{REMOTE_ROOT_URL}/data/dsets/idf.npy"
 REMOTE_VOCAB_URL = f"{REMOTE_ROOT_URL}/data/dsets/tfidf_vocab.json"
 
 
-def get_tfidf_vectorizer(data_dir: str):
+def get_tfidf_vectorizer_old(data_dir: str):
     """
     Returns an sklearn TF-IDF vectorizer. See their website for docs.
     Loading hack inspired by some online blog post lol.
@@ -38,7 +38,30 @@ def get_tfidf_vectorizer(data_dir: str):
     vec._tfidf._idf_diag = sp.spdiags(idf, diags=0, m=len(idf), n=len(idf))
 
     return vec
+def get_tfidf_vectorizer(data_dir: str):
+    """
+    Returns a customized sklearn TF-IDF vectorizer with preloaded IDF values and vocabulary.
+    """
 
+    data_dir = Path(data_dir)
+
+    idf_loc, vocab_loc = data_dir / "idf.npy", data_dir / "tfidf_vocab.json"
+    if not (idf_loc.exists() and vocab_loc.exists()):
+        # Make sure to define collect_stats(data_dir) that computes and saves idf and vocabulary
+        collect_stats(data_dir)
+
+    idf = np.load(idf_loc)
+    with open(vocab_loc, "r") as f:
+        vocab = json.load(f)
+
+    # Initialize TfidfVectorizer with the loaded vocabulary
+    vec = TfidfVectorizer(vocabulary=vocab)
+    # Perform a dummy fit to initialize internal structures and make sure 'idf_' can be set
+    vec.fit([''])
+    # Directly assign the loaded idf values
+    vec.idf_ = idf
+
+    return vec
 
 def collect_stats(data_dir: str):
     """
